@@ -42,6 +42,8 @@ namespace MatrixFallingCode
         KeyboardUpdate[] keyData;
         State gamePadState;
         Random rng;
+        int width;
+        int height;
 
         UserInputProcessor userInputProcessor;
         Stopwatch gameInputTimer;
@@ -49,10 +51,16 @@ namespace MatrixFallingCode
         RawRectangleF TestTextArea;
 
         FallingAnimState FAState;
+        SettingMenu settings;
+
+
         //DropLine testDropLine;
         public RForm(string text) : base(text)
         {
-            this.ClientSize = new System.Drawing.Size(1920, 1080);
+            width = 1920;
+            height = 1080;
+
+            this.ClientSize = new System.Drawing.Size(width, height);
 
             desc = new SwapChainDescription()
             {
@@ -87,6 +95,7 @@ namespace MatrixFallingCode
             rng = new Random();
 
             FAState = new FallingAnimState(rng);
+            settings = new SettingMenu(d2dRenderTarget, width, height);
         }
 
         public void rLoop()
@@ -98,7 +107,7 @@ namespace MatrixFallingCode
             //userInputProcessor.DisplayGamePadState(d2dRenderTarget, solidColorBrush);
 
             FAState.DrawFAState(d2dRenderTarget, TestTextFormat, solidColorBrush);
-          
+            
 
             if (gameInputTimer.ElapsedMilliseconds >= 25)
             {
@@ -107,9 +116,11 @@ namespace MatrixFallingCode
                 gameInputTimer.Restart();
 
                 FAState.HandleGamePadInputs(userInputProcessor.CheckGamePadButtons());
-
                 FAState.UpdateDrops(rng);
             }
+
+            if (FAState.CheckSettingsMenuVisiblity())
+                settings.ShowSettingsMenu(d2dRenderTarget);
 
             d2dRenderTarget.EndDraw();
             swapChain.Present(0, PresentFlags.None);

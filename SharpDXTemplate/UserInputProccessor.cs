@@ -67,6 +67,12 @@ namespace MatrixFallingCode
                     return 2;
                 }
 
+                if (state.Gamepad.Buttons == GamepadButtonFlags.Start)
+                {
+                    return 6;
+                }
+
+
                 if (state.Gamepad.Buttons == GamepadButtonFlags.DPadRight)
                 {
                     return 1;

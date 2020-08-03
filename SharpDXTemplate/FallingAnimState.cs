@@ -21,6 +21,7 @@ namespace MatrixFallingCode
         List<DropLine> DropLines;
         int numberOfDrops;
         bool screenPaused;
+        bool isSettingMenuVisible;
         float redValue;
         float greenValue;
         float blueValue;
@@ -32,6 +33,7 @@ namespace MatrixFallingCode
         public FallingAnimState(Random rng)
         {
             screenPaused = false;
+            isSettingMenuVisible = false;
             redValue=0.0f;
             greenValue = 1.0f;
             blueValue = 0.0f;
@@ -59,6 +61,11 @@ namespace MatrixFallingCode
             if (gamePadButtonValue == 2)
             {
                 screenPaused = !screenPaused;
+            }
+
+            if (gamePadButtonValue == 6)
+            {
+                isSettingMenuVisible = !isSettingMenuVisible;
             }
 
 
@@ -131,5 +138,9 @@ namespace MatrixFallingCode
             }
         }
 
+        public bool CheckSettingsMenuVisiblity()
+        {
+            return isSettingMenuVisible;
+        }
     }
 }
