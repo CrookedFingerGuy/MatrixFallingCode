@@ -47,10 +47,9 @@ namespace MatrixFallingCode
         Stopwatch gameInputTimer;
         TextFormat TestTextFormat;
         RawRectangleF TestTextArea;
-        List<DropLine> DropLines;
-        int numberOfDrops;
 
-        DropLine testDropLine;
+        FallingAnimState FAState;
+        //DropLine testDropLine;
         public RForm(string text) : base(text)
         {
             this.ClientSize = new System.Drawing.Size(1920, 1080);
@@ -86,15 +85,8 @@ namespace MatrixFallingCode
             gameInputTimer = new Stopwatch();
             gameInputTimer.Start();
             rng = new Random();
-            
-            numberOfDrops = 150;
-            DropLines = new List<DropLine>(); 
-            
-            for(int i=0;i<numberOfDrops;i++)
-            {
-                DropLines.Add(new DropLine(rng));
-            }
 
+            FAState = new FallingAnimState(rng);
         }
 
         public void rLoop()
@@ -105,23 +97,18 @@ namespace MatrixFallingCode
             //d2dRenderTarget.DrawText("Test", TestTextFormat, TestTextArea, solidColorBrush);
             //userInputProcessor.DisplayGamePadState(d2dRenderTarget, solidColorBrush);
 
-            for(int i=0;i<numberOfDrops;i++)
-            {
-                DropLines[i].DrawDropLine(d2dRenderTarget, TestTextFormat, solidColorBrush);
-            }           
+            FAState.DrawFAState(d2dRenderTarget, TestTextFormat, solidColorBrush);
+          
 
-            if (gameInputTimer.ElapsedMilliseconds >= 250)
+            if (gameInputTimer.ElapsedMilliseconds >= 25)
             {
                 userInputProcessor.oldPacketNumber = gamePadState.PacketNumber;
                 gamePadState = userInputProcessor.GetGamePadState();
-                gameInputTimer.Restart();                
-                for(int i=0;i<numberOfDrops;i++)
-                {
-                    if(DropLines[i].SymbolIterator(rng))
-                    {
-                        DropLines[i] = new DropLine(rng);
-                    }
-                }
+                gameInputTimer.Restart();
+
+                FAState.HandleGamePadInputs(userInputProcessor.CheckGamePadButtons());
+
+                FAState.UpdateDrops(rng);
             }
 
             d2dRenderTarget.EndDraw();

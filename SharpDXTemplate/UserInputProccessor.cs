@@ -62,6 +62,11 @@ namespace MatrixFallingCode
             State state = controller.GetState();
             if (controller != null)
             {
+                if(state.Gamepad.Buttons== GamepadButtonFlags.Back)
+                {
+                    return 2;
+                }
+
                 if (state.Gamepad.Buttons == GamepadButtonFlags.DPadRight)
                 {
                     return 1;
@@ -71,6 +76,34 @@ namespace MatrixFallingCode
                 {
                     return -1;
                 }
+
+                if (state.Gamepad.Buttons == GamepadButtonFlags.DPadUp)
+                {
+                    return 3;
+                }
+                if (state.Gamepad.Buttons == GamepadButtonFlags.DPadDown)
+                {
+                    return -3;
+                }
+
+                if (state.Gamepad.Buttons == GamepadButtonFlags.A)
+                {
+                    return 4;
+                }
+                if (state.Gamepad.Buttons == GamepadButtonFlags.B)
+                {
+                    return -4;
+                }
+
+                if (state.Gamepad.Buttons == GamepadButtonFlags.X)
+                {
+                    return 5;
+                }
+                if (state.Gamepad.Buttons == GamepadButtonFlags.Y)
+                {
+                    return -5;
+                }
+
             }
 
             return 0;
