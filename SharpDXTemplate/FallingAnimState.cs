@@ -19,13 +19,14 @@ namespace MatrixFallingCode
     public class FallingAnimState
     {
         List<DropLine> DropLines;
-        int numberOfDrops;
-        bool screenPaused;
-        bool isSettingMenuVisible;
-        float redValue;
-        float greenValue;
-        float blueValue;
+        public int numberOfDrops;
+        public bool screenPaused;
+        public bool isSettingMenuVisible;
+        public float redValue;
+        public float greenValue;
+        public float blueValue;
 
+        public int fontSize;
         int updateSpeed;
         int speedCounter;
 
@@ -41,7 +42,7 @@ namespace MatrixFallingCode
             DropLines = new List<DropLine>();
             speedCounter = 0;
             updateSpeed = 10;
-
+            fontSize = 36;
             for (int i = 0; i < numberOfDrops; i++)
             {
                 DropLines.Add(new DropLine(rng));
@@ -56,7 +57,7 @@ namespace MatrixFallingCode
             }
         }
 
-        public void HandleGamePadInputs(int gamePadButtonValue)
+        public void HandleGamePadInputs(int gamePadButtonValue, SettingMenu sMenu)
         {
             if (gamePadButtonValue == 2)
             {
@@ -66,6 +67,7 @@ namespace MatrixFallingCode
             if (gamePadButtonValue == 6)
             {
                 isSettingMenuVisible = !isSettingMenuVisible;
+                sMenu.isVisible = isSettingMenuVisible;
             }
 
 

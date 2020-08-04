@@ -52,6 +52,7 @@ namespace MatrixFallingCode
 
         FallingAnimState FAState;
         SettingMenu settings;
+        TextFormat menuTextFormat;
 
 
         //DropLine testDropLine;
@@ -88,14 +89,17 @@ namespace MatrixFallingCode
             keyboard.Properties.BufferSize = 128;
             keyboard.Acquire();
             userInputProcessor = new UserInputProcessor();
-            TestTextFormat = new SharpDX.DirectWrite.TextFormat(new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Isolated), "Matrix Code NFI", FontWeight.Regular, FontStyle.Normal, 36);
+            menuTextFormat=new TextFormat(new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Isolated), "Arial", FontWeight.Regular, FontStyle.Normal, 16);
             TestTextArea = new SharpDX.Mathematics.Interop.RawRectangleF(10, 10, 400, 400);
             gameInputTimer = new Stopwatch();
             gameInputTimer.Start();
             rng = new Random();
 
             FAState = new FallingAnimState(rng);
-            settings = new SettingMenu(d2dRenderTarget, width, height);
+            settings = new SettingMenu(d2dRenderTarget,menuTextFormat, width, height,FAState);
+
+            TestTextFormat = new SharpDX.DirectWrite.TextFormat(new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Isolated), "Matrix Code NFI", FontWeight.Regular, FontStyle.Normal, FAState.fontSize);
+            
         }
 
         public void rLoop()
@@ -115,12 +119,19 @@ namespace MatrixFallingCode
                 gamePadState = userInputProcessor.GetGamePadState();
                 gameInputTimer.Restart();
 
-                FAState.HandleGamePadInputs(userInputProcessor.CheckGamePadButtons());
+                if (FAState.isSettingMenuVisible)
+                {
+                    settings.HandleGamePadInputs(userInputProcessor.CheckGamePadButtons(),FAState);
+                }
+                else
+                {
+                    FAState.HandleGamePadInputs(userInputProcessor.CheckGamePadButtons(),settings);
+                }
                 FAState.UpdateDrops(rng);
             }
 
             if (FAState.CheckSettingsMenuVisiblity())
-                settings.ShowSettingsMenu(d2dRenderTarget);
+                settings.ShowSettingsMenu(d2dRenderTarget,menuTextFormat);
 
             d2dRenderTarget.EndDraw();
             swapChain.Present(0, PresentFlags.None);

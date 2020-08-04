@@ -91,6 +91,7 @@
     <Compile Include="RForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SDXMenuControl.cs" />
     <Compile Include="SettingMenu.cs" />
     <Compile Include="UserInputProccessor.cs" />
   </ItemGroup>
