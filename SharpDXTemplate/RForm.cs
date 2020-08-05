@@ -44,6 +44,7 @@ namespace MatrixFallingCode
         Random rng;
         int width;
         int height;
+        SharpDX.DirectWrite.Factory fact;
 
         UserInputProcessor userInputProcessor;
         Stopwatch gameInputTimer;
@@ -76,6 +77,7 @@ namespace MatrixFallingCode
 
             Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.BgraSupport, new SharpDX.Direct3D.FeatureLevel[] { SharpDX.Direct3D.FeatureLevel.Level_10_0 }, desc, out device, out swapChain);
             d2dFactory = new SharpDX.Direct2D1.Factory();
+            fact = new SharpDX.DirectWrite.Factory();
             factory = swapChain.GetParent<Factory>();
             factory.MakeWindowAssociation(this.Handle, WindowAssociationFlags.IgnoreAll);
             backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
@@ -110,6 +112,8 @@ namespace MatrixFallingCode
             //d2dRenderTarget.DrawText("Test", TestTextFormat, TestTextArea, solidColorBrush);
             //userInputProcessor.DisplayGamePadState(d2dRenderTarget, solidColorBrush);
 
+            TestTextFormat.Dispose();
+            TestTextFormat = new TextFormat(fact, "Matrix Code NFI", FontWeight.Regular, FontStyle.Normal, FAState.fontSize);
             FAState.DrawFAState(d2dRenderTarget, TestTextFormat, solidColorBrush);
             
 
@@ -121,11 +125,11 @@ namespace MatrixFallingCode
 
                 if (FAState.isSettingMenuVisible)
                 {
-                    settings.HandleGamePadInputs(userInputProcessor.CheckGamePadButtons(),FAState);
+                    settings.HandleGamePadInputs(gamePadState,FAState,userInputProcessor.oldPacketNumber);
                 }
                 else
                 {
-                    FAState.HandleGamePadInputs(userInputProcessor.CheckGamePadButtons(),settings);
+                    FAState.HandleGamePadInputs(gamePadState, settings,userInputProcessor.oldPacketNumber);
                 }
                 FAState.UpdateDrops(rng);
             }

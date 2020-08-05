@@ -20,49 +20,25 @@ namespace MatrixFallingCode
 {
     public class SDXMenuControl
     {
-        int xLocation;
-        int yLocation;
-        int width;
-        int height;
-        string label;
-        RawColor4 labelColor;
-        RawColor4 activeColor;
+        protected int xLocation;
+        protected int yLocation;
+        protected int width;
+        protected int height;
         public int value;
-        TextFormat tFormat;
-        RawRectangleF labelRect;
-        SolidColorBrush labelSCBrush;
-        SolidColorBrush activeSCBrush;
-        RawRectangleF valueBox;
         public bool isActive;
+        public bool isSelectable;
 
-        public SDXMenuControl(RenderTarget D2DRT, TextFormat tf,string l, int x, int y, int width, int height,int v)
+
+        public SDXMenuControl(int x, int y, int w, int h)
         {
-            label = l;
             xLocation = x;
             yLocation = y;
-            tFormat = tf;
-            value = v;
-            labelRect = new RawRectangleF(x, y, x+width, y+height);
-            labelColor = new RawColor4(0f,0f,1f,1f);
-            labelSCBrush = new SolidColorBrush(D2DRT, labelColor);
-            activeColor= new RawColor4(1f, 0f, 0f, 1f);
-            activeSCBrush = new SolidColorBrush(D2DRT, activeColor);
-            isActive = false;
-            valueBox = new RawRectangleF(x + width + 15, y, x + width + 15 + 60, y + 20);
+            width = w;
+            height = h;
         }
 
-        public void DrawControl(RenderTarget D2DRT, TextFormat tFormat)
+        public virtual void DrawControl(RenderTarget D2DRT, TextFormat tFormat)
         {
-            D2DRT.DrawText(label, tFormat, labelRect, labelSCBrush);
-            if (isActive)
-            {
-                D2DRT.DrawRectangle(valueBox, activeSCBrush);
-            }
-            else
-            {
-                D2DRT.DrawRectangle(valueBox, labelSCBrush);
-            }
-            D2DRT.DrawText(value.ToString(), tFormat, valueBox, labelSCBrush);
         }
     }
 }

@@ -57,61 +57,64 @@ namespace MatrixFallingCode
             }
         }
 
-        public void HandleGamePadInputs(int gamePadButtonValue, SettingMenu sMenu)
+        public void HandleGamePadInputs(State controlerState, SettingMenu sMenu, int oldPacketNumber)
         {
-            if (gamePadButtonValue == 2)
+
+            if (controlerState.PacketNumber != oldPacketNumber)
             {
-                screenPaused = !screenPaused;
+                if (controlerState.Gamepad.Buttons == GamepadButtonFlags.Back)
+                {
+                    screenPaused = !screenPaused;
+                }
+
+                if (controlerState.Gamepad.Buttons == GamepadButtonFlags.Start)
+                {
+                    isSettingMenuVisible = !isSettingMenuVisible;
+                    sMenu.isVisible = isSettingMenuVisible;
+                }
             }
 
-            if (gamePadButtonValue == 6)
-            {
-                isSettingMenuVisible = !isSettingMenuVisible;
-                sMenu.isVisible = isSettingMenuVisible;
-            }
-
-
-            if (gamePadButtonValue == 4)
+            if (controlerState.Gamepad.Buttons == GamepadButtonFlags.A)
             {
                 if (redValue < 1.0f)
                     redValue += 0.1f;
             }
-            if (gamePadButtonValue == -4)
+            if (controlerState.Gamepad.Buttons == GamepadButtonFlags.B)
             {
                 if (redValue > 0.0f)
                     redValue -= 0.1f;
             }
 
-            if (gamePadButtonValue == 5)
+            if (controlerState.Gamepad.Buttons == GamepadButtonFlags.X)
             {
                 if (greenValue < 1.0f)
                     greenValue += 0.1f;
             }
-            if (gamePadButtonValue == -5)
+            if (controlerState.Gamepad.Buttons == GamepadButtonFlags.Y)
             {
                 if (greenValue > 0.0f)
                     greenValue -= 0.1f;
             }
 
 
-            if (gamePadButtonValue == 1)
+            if (controlerState.Gamepad.Buttons == GamepadButtonFlags.DPadRight)
             {
                 if (blueValue < 1.0f)
                     blueValue += 0.1f;
             }
-            if (gamePadButtonValue == -1)
+            if (controlerState.Gamepad.Buttons == GamepadButtonFlags.DPadLeft)
             {
                 if (blueValue > 0.0f)
                     blueValue -= 0.1f;
             }
 
-            if(gamePadButtonValue == 3)
+            if(controlerState.Gamepad.Buttons == GamepadButtonFlags.DPadUp)
             {
                 if (updateSpeed < 40)
                     updateSpeed++;                
             }
 
-            if(gamePadButtonValue == -3)
+            if(controlerState.Gamepad.Buttons == GamepadButtonFlags.DPadDown)
             {
                 if (updateSpeed > 0)
                     updateSpeed--;
