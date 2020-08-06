@@ -1,23 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing.Imaging;
+﻿using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-using SharpDX.Windows;
 using SharpDX.DirectWrite;
 using SharpDX.Mathematics.Interop;
-using SharpDX.DirectInput;
-using SharpDX.XInput;
-
-
 
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 

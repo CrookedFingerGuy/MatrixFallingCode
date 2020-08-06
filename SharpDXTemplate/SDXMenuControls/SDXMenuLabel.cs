@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
+﻿
 using SharpDX.Direct2D1;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using SharpDX.Windows;
 using SharpDX.DirectWrite;
 using SharpDX.Mathematics.Interop;
-using SharpDX.DirectInput;
-using SharpDX.XInput;
-using SharpDX.Direct3D9;
 
 namespace MatrixFallingCode
 {
@@ -24,8 +12,6 @@ namespace MatrixFallingCode
         SolidColorBrush labelSCBrush;
         RawRectangleF labelRect;
         TextFormat tFormat;
-
-
 
         public SDXMenuLabel(RenderTarget D2DRT, TextFormat tf, string l, int x,int y,int width,int height):base(x,y,width,height)
         {

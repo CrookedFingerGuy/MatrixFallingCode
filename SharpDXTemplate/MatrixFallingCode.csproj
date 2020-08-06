@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DropLine.cs" />
+    <Compile Include="FADefaults.cs" />
     <Compile Include="FallingAnimState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

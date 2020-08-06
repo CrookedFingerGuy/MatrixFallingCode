@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
-using SharpDX.Direct2D1;
+﻿using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.Mathematics.Interop;
 using SharpDX.XInput;
@@ -15,7 +9,7 @@ namespace MatrixFallingCode
     {
         TextFormat linesTextFormat;
         RawRectangleF linesTextArea;
-        string textForDebug = "Test";
+        string errorText = "Test";
         Controller[] controllers;
         Controller controller = null;
         public int oldPacketNumber;
@@ -26,7 +20,6 @@ namespace MatrixFallingCode
             controllers = new[] { new Controller(UserIndex.One), new Controller(UserIndex.Two), new Controller(UserIndex.Three), new Controller(UserIndex.Four) };
 
             // Get 1st controller available
-
             foreach (var selectControler in controllers)
             {
                 if (selectControler.IsConnected)
@@ -44,77 +37,17 @@ namespace MatrixFallingCode
         {
             if (controller == null)
             {
-                textForDebug = "No XInput controller installed";
+                errorText = "No XInput controller installed";
             }
             else
             {
-
-                textForDebug = "Found a XInput controller available";
-
+                errorText = "Found a XInput controller available";
                 // Poll events from joystick
                 var state = controller.GetState();
                 d2dRT.DrawText("button pressed: " + state.Gamepad.ToString(), linesTextFormat, linesTextArea, brush);
             }
         }
-
-        public int CheckGamePadButtons()
-        {
-            State state = controller.GetState();
-            if (controller != null)
-            {
-                if(state.Gamepad.Buttons== GamepadButtonFlags.Back)
-                {
-                    return 2;
-                }
-
-                if (state.Gamepad.Buttons == GamepadButtonFlags.Start)
-                {
-                    return 6;
-                }
-
-
-                if (state.Gamepad.Buttons == GamepadButtonFlags.DPadRight)
-                {
-                    return 1;
-                }
-
-                if (state.Gamepad.Buttons == GamepadButtonFlags.DPadLeft)
-                {
-                    return -1;
-                }
-
-                if (state.Gamepad.Buttons == GamepadButtonFlags.DPadUp)
-                {
-                    return 3;
-                }
-                if (state.Gamepad.Buttons == GamepadButtonFlags.DPadDown)
-                {
-                    return -3;
-                }
-
-                if (state.Gamepad.Buttons == GamepadButtonFlags.A)
-                {
-                    return 4;
-                }
-                if (state.Gamepad.Buttons == GamepadButtonFlags.B)
-                {
-                    return -4;
-                }
-
-                if (state.Gamepad.Buttons == GamepadButtonFlags.X)
-                {
-                    return 5;
-                }
-                if (state.Gamepad.Buttons == GamepadButtonFlags.Y)
-                {
-                    return -5;
-                }
-
-            }
-
-            return 0;
-        }
-
+      
         public State GetGamePadState()
         {
             return controller.GetState();

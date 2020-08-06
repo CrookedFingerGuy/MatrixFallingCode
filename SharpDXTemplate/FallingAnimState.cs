@@ -1,35 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using SharpDX.Windows;
 using SharpDX.DirectWrite;
-using SharpDX.Mathematics.Interop;
-using SharpDX.DirectInput;
 using SharpDX.XInput;
 
 namespace MatrixFallingCode
 {
     public class FallingAnimState
     {
-        List<DropLine> DropLines;
-        public int numberOfDrops;
         public bool screenPaused;
         public bool isSettingMenuVisible;
         public float redValue;
         public float greenValue;
         public float blueValue;
-
         public int fontSize;
+        public int minDropLength;
+        public int maxDropLength;
         int updateSpeed;
         int speedCounter;
 
+        public int numberOfDrops;
+        List<DropLine> DropLines;
 
         public FallingAnimState(Random rng)
         {
@@ -38,15 +29,19 @@ namespace MatrixFallingCode
             redValue=0.0f;
             greenValue = 1.0f;
             blueValue = 0.0f;
-            numberOfDrops = 250;
-            DropLines = new List<DropLine>();
             speedCounter = 0;
             updateSpeed = 10;
             fontSize = 36;
+            minDropLength = 4;
+            maxDropLength = 16;
+
+            numberOfDrops = 1000;
+            DropLines = new List<DropLine>();
             for (int i = 0; i < numberOfDrops; i++)
             {
-                DropLines.Add(new DropLine(rng));
+                DropLines.Add(new DropLine(rng,minDropLength,maxDropLength));
             }
+            numberOfDrops = 250;
         }
 
         public void DrawFAState(RenderTarget D2DRT,TextFormat tf,SolidColorBrush br)
@@ -59,7 +54,7 @@ namespace MatrixFallingCode
 
         public void HandleGamePadInputs(State controlerState, SettingMenu sMenu, int oldPacketNumber)
         {
-
+            //Act one time on a button press
             if (controlerState.PacketNumber != oldPacketNumber)
             {
                 if (controlerState.Gamepad.Buttons == GamepadButtonFlags.Back)
@@ -70,50 +65,59 @@ namespace MatrixFallingCode
                 if (controlerState.Gamepad.Buttons == GamepadButtonFlags.Start)
                 {
                     isSettingMenuVisible = !isSettingMenuVisible;
+                    sMenu.LoadCurrentStateIntoMenu(this);
                     sMenu.isVisible = isSettingMenuVisible;
                 }
             }
 
-            if (controlerState.Gamepad.Buttons == GamepadButtonFlags.A)
+            //Press and hold will repeat the action every rLoop()
+            if (controlerState.Gamepad.Buttons == GamepadButtonFlags.RightShoulder)
             {
-                if (redValue < 1.0f)
+                if (redValue + 0.1f < 1.0f)
                     redValue += 0.1f;
+                else
+                    redValue = 1.0f;
             }
-            if (controlerState.Gamepad.Buttons == GamepadButtonFlags.B)
+            if (controlerState.Gamepad.Buttons == GamepadButtonFlags.LeftShoulder)
             {
-                if (redValue > 0.0f)
+                if (redValue - 0.1f > 0.0f)
                     redValue -= 0.1f;
+                else
+                    redValue = 0.0f;
             }
-
             if (controlerState.Gamepad.Buttons == GamepadButtonFlags.X)
             {
-                if (greenValue < 1.0f)
+                if (greenValue + 0.1f < 1.0f)
                     greenValue += 0.1f;
+                else
+                    greenValue = 1.0f;
             }
             if (controlerState.Gamepad.Buttons == GamepadButtonFlags.Y)
             {
-                if (greenValue > 0.0f)
+                if (greenValue - 0.1f > 0.0f)
                     greenValue -= 0.1f;
+                else
+                    greenValue = 0.0f;
             }
-
-
             if (controlerState.Gamepad.Buttons == GamepadButtonFlags.DPadRight)
             {
-                if (blueValue < 1.0f)
+                if (blueValue + 0.1f < 1.0f)
                     blueValue += 0.1f;
+                else
+                    blueValue = 1.0f;
             }
             if (controlerState.Gamepad.Buttons == GamepadButtonFlags.DPadLeft)
             {
-                if (blueValue > 0.0f)
+                if (blueValue - 0.1f > 0.0f)
                     blueValue -= 0.1f;
+                else
+                    blueValue = 0.0f;
             }
-
             if(controlerState.Gamepad.Buttons == GamepadButtonFlags.DPadUp)
             {
                 if (updateSpeed < 40)
                     updateSpeed++;                
             }
-
             if(controlerState.Gamepad.Buttons == GamepadButtonFlags.DPadDown)
             {
                 if (updateSpeed > 0)
@@ -131,7 +135,7 @@ namespace MatrixFallingCode
                     {
                         if (DropLines[i].SymbolIterator(rng))
                         {
-                            DropLines[i] = new DropLine(rng);
+                            DropLines[i] = new DropLine(rng,minDropLength,maxDropLength);
                         }
                     }
                     speedCounter = 0;
