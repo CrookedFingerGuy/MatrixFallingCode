@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.XInput;
 
 namespace MatrixFallingCode
 {
+    [Serializable]
     public class FallingAnimState
     {
         public bool screenPaused;
@@ -26,7 +28,7 @@ namespace MatrixFallingCode
         {
             screenPaused = false;
             isSettingMenuVisible = false;
-            redValue=0.0f;
+            redValue = 0.0f;
             greenValue = 1.0f;
             blueValue = 0.0f;
             speedCounter = 0;
@@ -39,10 +41,33 @@ namespace MatrixFallingCode
             DropLines = new List<DropLine>();
             for (int i = 0; i < numberOfDrops; i++)
             {
-                DropLines.Add(new DropLine(rng,minDropLength,maxDropLength));
+                DropLines.Add(new DropLine(rng, minDropLength, maxDropLength));
             }
             numberOfDrops = 250;
         }
+        public FallingAnimState()
+        {
+            screenPaused = false;
+            isSettingMenuVisible = false;
+            redValue = 0.0f;
+            greenValue = 1.0f;
+            blueValue = 0.0f;
+            speedCounter = 0;
+            updateSpeed = 10;
+            fontSize = 36;
+            minDropLength = 4;
+            maxDropLength = 16;
+            Random rand = new Random();
+
+            numberOfDrops = 1000;
+            DropLines = new List<DropLine>();
+            for (int i = 0; i < numberOfDrops; i++)
+            {
+                DropLines.Add(new DropLine(rand, minDropLength, maxDropLength));
+            }
+            numberOfDrops = 250;
+        }
+
 
         public void DrawFAState(RenderTarget D2DRT,TextFormat tf,SolidColorBrush br)
         {

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Forms;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.Mathematics.Interop;
@@ -59,6 +58,7 @@ namespace MatrixFallingCode
             menuControls.Add(new SDXMenuButton(D2DRT, settingsTextFormat, "Reset to Defaults", screenWidth / 2 - 125, topLeftY + 325, 250, 25));
             menuControls.Add(new SDXMenuButton(D2DRT, settingsTextFormat, "Exit", screenWidth / 2 - 25, topLeftY + 360, 50, 25));
             menuControls.Add(new SDXMenuButton(D2DRT, settingsTextFormat, "Close Menu", screenWidth / 2 - 50, topLeftY + 395, 100, 25));
+            menuControls.Add(new SDXMenuButton(D2DRT, settingsTextFormat, "Save Settings", screenWidth / 2 - 100, topLeftY + 430, 200, 25));
             menuControls.Add(new SDXMenuLabel(D2DRT, tf, "Settings Menu", topLeftX + 200, topLeftY + 10, 200, 100));
             menuControls.Add(new SDXMenuImage(D2DRT, "DPadLeftRight.png", topLeftX + 25, screenHeight / 2 + menuHeight / 2 - 75, 64, 64));
         }
@@ -81,7 +81,7 @@ namespace MatrixFallingCode
             menuControls[6].value = faState.maxDropLength;
         }
 
-        public void HandleGamePadInputs(State controlerState, FallingAnimState faState,int oldPacketNumber)
+        public void HandleGamePadInputs(State controlerState, FallingAnimState faState,int oldPacketNumber,string workingPath)
         {
             if (controlerState.PacketNumber != oldPacketNumber)
             {
@@ -309,6 +309,13 @@ namespace MatrixFallingCode
                         {
                             isVisible = !isVisible;
                             faState.isSettingMenuVisible = isVisible;
+                        }
+                        break;
+                    case 10:
+                        {
+                            isVisible = false;
+                            faState.isSettingMenuVisible = false;
+                            FileUtils.WriteToXmlFile<FallingAnimState>(workingPath + @"\FallingAnimState.sta",faState);
                         }
                         break;
                 }

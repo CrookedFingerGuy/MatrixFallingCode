@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using SharpDX;
 using SharpDX.Direct2D1;
@@ -37,6 +38,7 @@ namespace MatrixFallingCode
         Keyboard keyboard;
         KeyboardUpdate[] keyData;
         State gamePadState;
+        string path;
 
         UserInputProcessor userInputProcessor;
         Random rng;
@@ -49,6 +51,8 @@ namespace MatrixFallingCode
 
         public RForm(string text) : base(text)
         {
+            path = Directory.GetCurrentDirectory();
+
             width = 1920;
             height = 1080;
 
@@ -82,7 +86,12 @@ namespace MatrixFallingCode
 
             userInputProcessor = new UserInputProcessor();
             rng = new Random();
-            FAState = new FallingAnimState(rng);
+            if (File.Exists(path + @"\FallingAnimState.sta"))
+            {
+                FAState = FileUtils.ReadFromXmlFile<FallingAnimState>(path + @"\FallingAnimState.sta");
+            }
+            else
+                FAState = new FallingAnimState(rng);
             menuTextFormat = new TextFormat(fact, "Arial", FontWeight.Regular, FontStyle.Normal, 16);
             symbolTextFormat = new TextFormat(fact, "Matrix Code NFI", FontWeight.Regular, FontStyle.Normal, FAState.fontSize);
             settings = new SettingMenu(d2dRenderTarget, menuTextFormat, width, height, FAState);
@@ -108,7 +117,7 @@ namespace MatrixFallingCode
 
                 if (FAState.isSettingMenuVisible)
                 {
-                    settings.HandleGamePadInputs(gamePadState,FAState,userInputProcessor.oldPacketNumber);
+                    settings.HandleGamePadInputs(gamePadState,FAState,userInputProcessor.oldPacketNumber,path);
                 }
                 else
                 {

@@ -87,6 +87,7 @@
     <Compile Include="DropLine.cs" />
     <Compile Include="FADefaults.cs" />
     <Compile Include="FallingAnimState.cs" />
+    <Compile Include="FileUtils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RForm.cs">
