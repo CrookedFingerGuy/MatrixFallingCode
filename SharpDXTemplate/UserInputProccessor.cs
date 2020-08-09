@@ -50,7 +50,10 @@ namespace MatrixFallingCode
       
         public State GetGamePadState()
         {
-            return controller.GetState();
+            if (controller != null)
+                return controller.GetState();
+            else
+                return new State();
         }
     }
 
